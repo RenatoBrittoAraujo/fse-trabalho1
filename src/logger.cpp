@@ -7,6 +7,8 @@
 #include "logger.h"
 #include "driver.h"
 
+Logger *instance = nullptr;
+
 Logger::Logger()
 {
     if (!this->file.is_open())
@@ -22,11 +24,11 @@ Logger::~Logger()
 
 Logger *Logger::get_instance()
 {
-    if (Logger::_instance == NULL)
-    {
-        Logger::_instance = new Logger();
-    }
-    return Logger::_instance;
+	if (instance == nullptr)
+	{
+		instance = new Logger();
+	}
+	return instance;
 }
 
 void Logger::log_temperature(float ti, float tr, float te)

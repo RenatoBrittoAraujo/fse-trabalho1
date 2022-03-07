@@ -16,7 +16,6 @@ public:
     void log_message(std::string msg);
 
     static Logger *get_instance();
-    static Logger *_instance;
 
 private:
 
