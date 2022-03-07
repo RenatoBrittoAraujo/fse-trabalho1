@@ -19,6 +19,8 @@ void terminal_le_tr()
 
 void terminal_controle()
 {
+    Logger logger = Logger::get_instance();
+
     terminal_le_tr();
     double TI, TE, intensidade = 0;
     while (1)
@@ -32,7 +34,7 @@ void terminal_controle()
 
         TE = bme_temperatura_atual();
         display_imprime_temp(TI, TR, TE, "PID ");
-        log_temperature(TI, TR, TE);
+        logger.log_temperature(TI, TR, TE);
         sleep(1);
     }
 }

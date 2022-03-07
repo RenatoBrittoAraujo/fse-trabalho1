@@ -60,6 +60,8 @@ bool reflow_atualiza_tr(float &TR, int &tempo_atual)
 
 void reflow_controle()
 {
+    Logger logger = Logger::get_instance();
+
     reflow_inicia_arquivo();
     float TR, TI, TE;
     double intensidade;
@@ -76,10 +78,10 @@ void reflow_controle()
         TE = bme_temperatura_atual();
 
         display_imprime_temp(TI, TR, TE, "REFLOW ");
-        log_temperature(TI, TR, TE);
+        logger.log_temperature(TI, TR, TE);
 
         std::string message = "Tempo: " + std::to_string(tempo_atual) + ",TR: " + std::to_string(TR);
-        log_temperature(TI, TR, TE);
+        logger.log_temperature(TI, TR, TE);
         sleep(1);
     }
 }
