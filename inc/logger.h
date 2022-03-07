@@ -3,9 +3,9 @@
 
 #include <string>
 
-void logger_escreve_temp(float TI, float TR, float TE);
-void logger_escreve_string(std::string mensagem);
-void logger_encerra();
-void logger_inicia();
+void log_temperature(float TI, float TR, float TE);
+void log_message(std::string mensagem);
+void kill_logger();
+void init_logger();
 
 #endif

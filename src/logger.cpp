@@ -2,39 +2,35 @@
 #include <fstream>
 #include <string>
 #include <ctime>
-
 #include "driver.h"
 
-static std::ofstream arquivo;
-static std::string tempo_agora;
+std::ofstream file;
 
-void logger_get_tempo()
+std::string get_timestamp()
 {
     time_t time_now;
     time(&time_now);
-    tempo_agora = ctime(&time_now);
-    tempo_agora.pop_back();
+    std::string timestamp = ctime(&time_now);
+    timestamp.pop_back();
+    return timestamp;
 }
 
-void logger_inicia()
+void init_logger()
 {
-    logger_get_tempo();
-    arquivo.open("./logs/logs.csv");
+    file.open("./logs/logs.csv");
 }
 
-void logger_escreve_temp(float TI, float TR, float TE)
+void log_temperature(float TI, float TR, float TE)
 {
-    logger_get_tempo();
-    arquivo << tempo_agora << ',' << TI << ',' << TR << ',' << TE << '\n';
+    file << get_timestamp() << ',' << TI << ',' << TR << ',' << TE << '\n';
 }
 
-void logger_escreve_string(std::string mensagem)
+void log_message(std::string mensagem)
 {
-    logger_get_tempo();
-    arquivo << tempo_agora << ',' << mensagem << '\n';
+    file << get_timestamp() << ',' << mensagem << '\n';
 }
 
-void logger_encerra()
+void kill_logger()
 {
-    arquivo.close();
+    file.close();
 }

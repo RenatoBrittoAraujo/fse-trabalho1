@@ -76,10 +76,10 @@ void reflow_controle()
         TE = bme_temperatura_atual();
 
         display_imprime_temp(TI, TR, TE, "REFLOW ");
-        logger_escreve_temp(TI, TR, TE);
+        log_temperature(TI, TR, TE);
 
         std::string message = "Tempo: " + std::to_string(tempo_atual) + ",TR: " + std::to_string(TR);
-        logger_escreve_temp(TI, TR, TE);
+        log_temperature(TI, TR, TE);
         sleep(1);
     }
 }

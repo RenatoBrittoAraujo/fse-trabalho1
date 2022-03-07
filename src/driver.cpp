@@ -120,7 +120,7 @@ void kill_driver(int exit_code)
 
 #endif
 
-    logger_encerra();
+    kill_logger();
     exit(std::min(exit_code, 1));
 }
 
@@ -138,7 +138,7 @@ void initialize()
 
     signal(SIGINT, kill_driver);
     signal(SIGQUIT, kill_driver);
-    logger_inicia();
+    init_logger();
     config_input();
     menu();
     kill_driver(0);
