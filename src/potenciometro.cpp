@@ -12,23 +12,23 @@
 
 void potenciometro_controle()
 {
-    double TI, TR, TE, intensidade = 0;
-    Logger logger = Logger::get_instance();
+    double ti, tr, te, i = 0;
+    Logger *logger = Logger::get_instance();
     while (1)
     {
-        TI = UART_solicita<float>(TEMP_INTERNA);
+        ti = UART_solicita<float>(TEMP_INTERNA);
 
-        intensidade = pid_controle(TI);
-        gpio_controle_temperatura(intensidade);
+        i = pid_controle(ti);
+        gpio_controle_temperatura(i);
 
-        TR = UART_solicita<float>(TEMP_POTENCIOMETRO);
+        tr = UART_solicita<float>(TEMP_POTENCIOMETRO);
 
-        pid_atualiza_referencia(TR);
+        pid_atualiza_referencia(tr);
 
-        TE = bme_temperatura_atual();
+        te = bme_temperatura_atual();
 
-        display_imprime_temp(TI, TR, TE, "PID ");
-        logger.log_temperature(TI, TR, TE);
+        display_imprime_temp(ti, tr, te, "PID ");
+        logger->log_temperature(ti, tr, te);
 
         sleep(1);
     }

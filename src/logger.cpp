@@ -2,7 +2,9 @@
 #include <fstream>
 #include <string>
 #include <ctime>
+#include <cstddef>
 
+#include "logger.h"
 #include "driver.h"
 
 Logger::Logger()
@@ -18,28 +20,28 @@ Logger::~Logger()
     file.close();
 }
 
-Logger Logger::get_instance()
+Logger *Logger::get_instance()
 {
-    if (!Logger::_instance)
+    if (Logger::_instance == NULL)
     {
-        Logger::_instance = Logger();
+        Logger::_instance = new Logger();
     }
     return Logger::_instance;
 }
 
-void Logger::log_temperature(float TI, float TR, float TE)
+void Logger::log_temperature(float ti, float tr, float te)
 {
 
-    file << this->get_timestamp() << ',' << TI << ',' << TR << ',' << TE << '\n';
+    this->file << this->get_timestamp() << ", " << ti << ", " << te << ", " << tr << '\n';
 }
 
-void Logger::log_message(std::string mensagem)
+void Logger::log_message(std::string msg)
 {
     if (!file.is_open())
     {
-        file.open("./logs/logs.csv");
+        this->file.open("./logs/logs.csv");
     }
-    file << this->get_timestamp() << ',' << mensagem << '\n';
+    this->file << this->get_timestamp() << ',' << msg << '\n';
 }
 
 std::string Logger::get_timestamp()

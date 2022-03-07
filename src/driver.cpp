@@ -109,6 +109,7 @@ void menu(int value = 0)
 void kill_driver(int exit_code)
 {
     std::cout << "Encerrando a execução do programa..." << std::endl;
+    Logger *logger = Logger::get_instance();
 
 #ifndef TEST_LOCAL
 
@@ -120,13 +121,12 @@ void kill_driver(int exit_code)
 
 #endif
 
-    kill_logger();
+    logger->~Logger();
     exit(std::min(exit_code, 1));
 }
 
 void initialize()
 {
-
 #ifndef TEST_LOCAL
 
     display_imprime_string("Carregando...");
