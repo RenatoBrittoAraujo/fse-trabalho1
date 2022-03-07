@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
@@ -43,11 +44,13 @@ void config_input()
     std::cout << "Configure os parâmetros do PID" << std::endl;
 
     std::cout << "Digite a constante de controle proporcional (kp): " << std::endl;
-    cin >> kp;
+    std::cin >> kp;
+
     std::cout << "Digite a constante de controle integral (ki): " << std::endl;
-    cin >> ki;
+    std::cin >> ki;
+
     std::cout << "Digite a constante de controle derivativo (kd): " << std::endl;
-    cin >> kd;
+    std::cin >> kd;
 
     pid_configura_constantes(kp, ki, kd);
     system("clear");
@@ -96,7 +99,7 @@ void menu(int value = 0)
             return;
             break;
         default:
-            puts("Escolha uma opção válida..." << std::endl;
+            std::cout << "Escolha uma opção válida..." << std::endl;
             sleep(5);
             break;
         }

@@ -2,6 +2,7 @@
 #include <pid.h>
 #include <gpio.h>
 #include <bme_aux.h>
+#include <iostream>
 #include <display.h>
 #include <logger.h>
 #include <unistd.h>
@@ -13,7 +14,7 @@ static float TR = 0;
 void terminal_le_tr()
 {
     std::cout << "Insira a temperatura de referência" << std::endl;
-    cin >> TR;
+    std::cin >> TR;
 }
 
 void terminal_controle()

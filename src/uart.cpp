@@ -5,10 +5,11 @@
 #include <unistd.h>  //Used for UART
 #include <fcntl.h>   //Used for UART
 #include <termios.h> //Used for UART
+#include <iostream>
 
 #include "crc.h"
 #include "uart.h"
-#include "app.h"
+#include "driver.h"
 
 template int UART_solicita<int>(int sub_codigo);
 template float UART_solicita<float>(int sub_codigo);
@@ -47,7 +48,7 @@ void UART_escreve_mensagem(unsigned char *buffer, int size)
 {
     UART_checa();
 
-    std::cout << "Escrevendo caracteres na UART ...");
+    std::cout << "Escrevendo caracteres na UART ..." << std::endl;
     int count = write(uart0_filestream, &buffer[0], size);
 
     if (count < 0)
@@ -56,7 +57,7 @@ void UART_escreve_mensagem(unsigned char *buffer, int size)
     }
     else
     {
-        std::cout << " %d bytes escrito.\n", count);
+        std::cout << count << " bytes escrito" << std::endl;
     }
 }
 
