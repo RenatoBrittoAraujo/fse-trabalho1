@@ -13,10 +13,11 @@
 void potenciometro_controle()
 {
     double TI, TR, TE, intensidade = 0;
+    Logger logger = Logger::get_instance();
     while (1)
     {
         TI = UART_solicita<float>(TEMP_INTERNA);
-        
+
         intensidade = pid_controle(TI);
         gpio_controle_temperatura(intensidade);
 
@@ -27,8 +28,8 @@ void potenciometro_controle()
         TE = bme_temperatura_atual();
 
         display_imprime_temp(TI, TR, TE, "PID ");
-        log_temperature(TI, TR, TE);
-        
+        logger.log_temperature(TI, TR, TE);
+
         sleep(1);
     }
 }
