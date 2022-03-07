@@ -138,7 +138,6 @@ void initialize()
 
     signal(SIGINT, kill_driver);
     signal(SIGQUIT, kill_driver);
-    init_logger();
     config_input();
     menu();
     kill_driver(0);
