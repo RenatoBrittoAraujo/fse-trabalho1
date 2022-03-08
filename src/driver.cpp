@@ -14,93 +14,69 @@
 #include "reflow.h"
 #include "terminal.h"
 
-// #define TEST_LOCAL
-
 void config_input()
 {
-    int opcao = -1;
-    while (opcao != 1 and opcao != 0)
+    std::string option = "";
+
+    while (option != "yes" && option != "no")
     {
-        std::cout << "Digite 0 para usar os valores padrões:\nKP:50\nKI:0.2\nKD:400" << std::endl;
-        std::cout << "Digite 1 para configurar os valores" << std::endl;
-        scanf(" %d", &opcao);
-        switch (opcao)
+        std::cout << "Would you like to use default values?: (KI = 0.2  KP = 43  KD = 500)" << std::endl;
+        std::cin << option;
+        if (option != "yes" && option != "no")
         {
-        case 0:
-            return;
-        case 1:
-            break;
-        default:
-            std::cout << "Escolha uma opção válida" << std::endl;
-            sleep(5);
-            system("clear");
-            break;
+            std::cout << "Invalid option, ";
         }
     }
 
-    system("clear");
+    if (option == "yes")
+    {
+        return;
+    }
+
     double kp, ki, kd;
-
-    std::cout << "Configure os parâmetros do PID" << std::endl;
-
-    std::cout << "Digite a constante de controle proporcional (kp): " << std::endl;
-    std::cin >> kp;
-
-    std::cout << "Digite a constante de controle integral (ki): " << std::endl;
+    std::cout << "Value for KI: ";
     std::cin >> ki;
 
-    std::cout << "Digite a constante de controle derivativo (kd): " << std::endl;
+    std::cout << "Value for KD: ";
     std::cin >> kd;
 
-    pid_configura_constantes(kp, ki, kd);
-    system("clear");
+    std::cout << "Value for KP: ";
+    std::cin >> kp;
+
+    set_params(ki, kp, kd);
 }
 
-void menu(int value = 0)
+void
+
+    void
+    menu(int value = 0)
 {
-
-#ifndef TEST_LOCAL
-
-    gpio_desliga_resistencia();
-    gpio_desliga_ventoinha();
-
-#endif
-
-    while (1)
+    for (;;)
     {
         system("clear");
-        int opcao = -1;
-        std::cout << "Escolha o modo de controle:" << std::endl;
-        std::cout << "  1 - Potenciometro" << std::endl;
-        std::cout << "  2 - Curva reflow" << std::endl;
-        std::cout << "  3 - Terminal" << std::endl;
-        std::cout << "  9 - Terminar execução" << std::endl;
 
-        scanf(" %d", &opcao);
+        std::cout << "Which control mode would you prefer?" << std::endl;
+        std::cout << " - reflow" << std::endl;
+        std::cout << " - potentiometer" << std::endl;
+        std::cout << " - terminal" << std::endl;
+
+        std::string opcao = -1;
+        std::cin >> opcao;
+        std::cout << "Use CTRL + C to exit." << std::endl;
 
         switch (opcao)
         {
-        case 1:
-            std::cout << "Pressione ctrl + \\ para sair desse modo e voltar ao menu" << std::endl;
-            sleep(5);
-            potenciometro_controle();
+        case "reflow":
+            reflow_controller();
             break;
-        case 2:
-            std::cout << "Pressione ctrl + \\ para sair desse modo e voltar ao menu" << std::endl;
-            sleep(5);
-            reflow_controle();
+        case "potentiometer":
+            potentiometer_controller();
             break;
-        case 3:
-            std::cout << "Pressione ctrl + \\ para sair desse modo e voltar ao menu" << std::endl;
-            sleep(5);
-            terminal_controle();
-            break;
-        case 9:
-            return;
+        case "terminal":
+            terminal_controller();
             break;
         default:
-            std::cout << "Escolha uma opção válida..." << std::endl;
-            sleep(5);
+            std::cout << "Invalid option, try again" << std::endl;
             break;
         }
     }
@@ -108,18 +84,8 @@ void menu(int value = 0)
 
 void kill_driver(int exit_code)
 {
-    std::cout << "Encerrando a execução do programa..." << std::endl;
+    std::cout << "Exiting..." << std::endl;
     Logger *logger = Logger::get_instance();
-
-#ifndef TEST_LOCAL
-
-    display_imprime_string("Desligando...");
-    gpio_desliga_resistencia();
-    gpio_desliga_ventoinha();
-    UART_encerra();
-    display_imprime_string("Recompilando.");
-
-#endif
 
     logger->~Logger();
     exit(std::min(exit_code, 1));
@@ -127,15 +93,6 @@ void kill_driver(int exit_code)
 
 void initialize()
 {
-#ifndef TEST_LOCAL
-
-    display_imprime_string("Carregando...");
-    wiringPiSetup();
-    UART_configura();
-    bme_conecta();
-
-#endif
-
     signal(SIGINT, kill_driver);
     signal(SIGQUIT, kill_driver);
     config_input();

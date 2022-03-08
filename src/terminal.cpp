@@ -17,7 +17,7 @@ void terminal_le_tr()
     std::cin >> TR;
 }
 
-void terminal_controle()
+void terminal_controller()
 {
     Logger *logger = Logger::get_instance();
 

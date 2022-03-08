@@ -1,5 +1,5 @@
 #ifndef REFLOW_H_
 #define REFLOW_H_
 
-void reflow_controle();
+void reflow_controller();
 #endif

@@ -10,7 +10,7 @@
 #define TEMP_INTERNA 0xC1
 #define TEMP_POTENCIOMETRO 0xC2
 
-void potenciometro_controle()
+void potentiometer_controller()
 {
     double ti, tr, te, i = 0;
     Logger *logger = Logger::get_instance();

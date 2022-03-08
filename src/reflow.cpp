@@ -58,7 +58,7 @@ bool reflow_atualiza_tr(float &TR, int &tempo_atual)
     return true;
 }
 
-void reflow_controle()
+void reflow_controller()
 {
     Logger *logger = Logger::get_instance();
 
