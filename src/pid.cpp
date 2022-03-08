@@ -42,8 +42,8 @@ double pid_controle(double saida_medida)
     double delta_error =
         error - previous_error; // Diferença entre os erros (Termo Derivativo)
 
-    sinal_de_controle = Kp * error + (Ki * T) * error_total +
-                        (Kd / T) * delta_error; // PID calcula sinal de controle
+    sinal_de_controle = kp * error + (ki * T) * error_total +
+                        (kd / T) * delta_error; // PID calcula sinal de controle
 
     if (sinal_de_controle >= signal_MAX)
     {

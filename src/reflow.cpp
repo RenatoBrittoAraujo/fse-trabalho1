@@ -6,7 +6,6 @@
 #include <sstream>
 #include <vector>
 #include <tuple>
-
 #include "driver.h"
 #include "gpio.h"
 #include "logger.h"
@@ -17,44 +16,38 @@
 
 #define TEMP_INTERNA 0xC1
 
-std::ifstream arquivo;
-std::string nome_arquivo = "./assets/reflow.csv";
+std::ifstream file;
 std::vector<std::tuple<int, float>> valores;
 static int mod;
 
-void reflow_inicia_arquivo()
+void reflow_initialize()
 {
-    arquivo.open(nome_arquivo);
+    file.open("./assets/reflow.csv");
+    std::string line, temp, time;
+    file >> line;
 
-    std::string linha, temperatura, tempo;
-
-    arquivo >> linha;
-
-    while (arquivo >> linha)
+    while (file >> line)
     {
-        std::stringstream ss(linha);
-        std::getline(ss, tempo, ',');
-        std::getline(ss, temperatura, '\n');
-        valores.push_back(std::make_tuple(stoi(tempo), stof(temperatura)));
+        std::stringstream ss(line);
+        std::getline(ss, time, ',');
+        std::getline(ss, temp, '\n');
+        valores.push_back(std::make_tuple(stoi(time), stof(temp)));
     }
-    arquivo.close();
+    file.close();
     std::sort(valores.begin(), valores.end());
     float _t;
     std::tie(mod, _t) = valores.back();
 }
 
-bool reflow_atualiza_tr(float &TR, int &tempo_atual)
+bool update_tr(float &TR, int &current_time)
 {
-    int index = std::upper_bound(valores.begin(), valores.end(), std::make_tuple(tempo_atual % mod, 0.0)) - valores.begin();
+    int index = std::upper_bound(valores.begin(), valores.end(), std::make_tuple(current_time % mod, 0.0)) - valores.begin();
     index--;
-    int _tempo;
-    std::tie(_tempo, TR) = valores[index];
-
-    tempo_atual++;
-
-    if (tempo_atual > 3600)
+    int _time;
+    std::tie(_time, TR) = valores[index];
+    current_time++;
+    if (current_time > 3600)
         return false;
-
     return true;
 }
 
@@ -62,25 +55,21 @@ void reflow_controller()
 {
     Logger *logger = Logger::get_instance();
 
-    reflow_inicia_arquivo();
+    reflow_initialize();
     float TR, TI, TE;
     double intensidade;
-    int tempo_atual = 0;
-    while (reflow_atualiza_tr(TR, tempo_atual))
+    int current_time = 0;
+
+    while (update_tr(TR, current_time))
     {
         TI = UART_solicita<float>(TEMP_INTERNA);
         intensidade = pid_controle(TI);
-
         gpio_controle_temperatura(intensidade);
-
         pid_atualiza_referencia(TR);
-
         TE = bme_temperatura_atual();
-
         display_imprime_temp(TI, TR, TE, "REFLOW ");
         logger->log_temperature(TI, TR, TE);
-
-        std::string message = "Tempo: " + std::to_string(tempo_atual) + ",TR: " + std::to_string(TR);
+        std::string message = "Tempo: " + std::to_string(current_time) + ",TR: " + std::to_string(TR);
         logger->log_temperature(TI, TR, TE);
         sleep(1);
     }

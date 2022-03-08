@@ -16,19 +16,19 @@
 
 void config_input()
 {
-    std::string option = "";
+    std::string default_mode = "";
 
-    while (option != "yes" && option != "no")
+    while (default_mode != "yes" && default_mode != "no")
     {
-        std::cout << "Would you like to use default values?: (KI = 0.2  KP = 43  KD = 500)" << std::endl;
-        std::cin << option;
-        if (option != "yes" && option != "no")
+        std::cout << "Would you like to use default values? (yes/no) (KI = 0.2  KP = 43  KD = 500)" << std::endl;
+        std::cin >> default_mode;
+        if (default_mode != "yes" && default_mode != "no")
         {
             std::cout << "Invalid option, ";
         }
     }
 
-    if (option == "yes")
+    if (default_mode == "yes")
     {
         return;
     }
@@ -46,39 +46,35 @@ void config_input()
     set_params(ki, kp, kd);
 }
 
-void
-
-    void
-    menu(int value = 0)
+void menu(int value = 0)
 {
     for (;;)
     {
-        system("clear");
-
         std::cout << "Which control mode would you prefer?" << std::endl;
         std::cout << " - reflow" << std::endl;
         std::cout << " - potentiometer" << std::endl;
         std::cout << " - terminal" << std::endl;
 
-        std::string opcao = -1;
-        std::cin >> opcao;
+        std::string control_mode;
+        std::cin >> control_mode;
         std::cout << "Use CTRL + C to exit." << std::endl;
 
-        switch (opcao)
-        {
-        case "reflow":
+        if (control_mode == "reflow") {
             reflow_controller();
-            break;
-        case "potentiometer":
-            potentiometer_controller();
-            break;
-        case "terminal":
-            terminal_controller();
-            break;
-        default:
-            std::cout << "Invalid option, try again" << std::endl;
-            break;
+            continue;
         }
+
+        if (control_mode == "potentiometer") {
+            potentiometer_controller();
+            continue;
+        }
+
+        if (control_mode == "terminal") {
+            terminal_controller();
+            continue;
+        }
+
+        std::cout << "Invalid option, try again" << std::endl;
     }
 }
 
@@ -86,7 +82,6 @@ void kill_driver(int exit_code)
 {
     std::cout << "Exiting..." << std::endl;
     Logger *logger = Logger::get_instance();
-
     logger->~Logger();
     exit(std::min(exit_code, 1));
 }

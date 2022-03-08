@@ -14,22 +14,21 @@ void potentiometer_controller()
 {
     double ti, tr, te, i = 0;
     Logger *logger = Logger::get_instance();
-    while (1)
+    for(;;)
     {
         ti = UART_solicita<float>(TEMP_INTERNA);
-
         i = pid_controle(ti);
         gpio_controle_temperatura(i);
 
         tr = UART_solicita<float>(TEMP_POTENCIOMETRO);
-
         pid_atualiza_referencia(tr);
 
         te = bme_temperatura_atual();
-
-        display_imprime_temp(ti, tr, te, "PID ");
+        
         logger->log_temperature(ti, tr, te);
 
+
+        display_imprime_temp(ti, tr, te, "PID ");
         sleep(1);
     }
 }
